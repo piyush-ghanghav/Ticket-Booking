@@ -1,0 +1,32 @@
+[
+  {
+    "trainId": "T123",
+    "trainNo": "12345",
+    "seats": [
+      [0, 1, 0, 1],
+      [1, 0, 1, 0],
+      [0, 0, 1, 1]
+    ],
+    "stationTime": {
+      "Mumbai": "06:30:00",
+      "Pune": "09:15:00",
+      "Nashik": "12:00:00"
+    },
+    "stations": ["Mumbai", "Pune", "Nashik"]
+  },
+  {
+    "trainId": "T456",
+    "trainNo": "67890",
+    "seats": [
+      [1, 0, 1],
+      [0, 1, 0],
+      [1, 1, 0]
+    ],
+    "stationTime": {
+      "Delhi": "08:00:00",
+      "Agra": "10:45:00",
+      "Jaipur": "14:30:00"
+    },
+    "stations": ["Delhi", "Agra", "Jaipur"]
+  }
+]
