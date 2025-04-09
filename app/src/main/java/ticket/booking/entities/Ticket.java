@@ -18,6 +18,7 @@ public class Ticket {
         this.dateOfTravel = dateOfTravel;
         this.train = train;
     }
+    public Ticket(){}
 
     public String getTicketInfo(){
         return String.format("Ticket ID: %s belongs to User %s from %s to %s on %s",ticketId,userId,source,destination,dateOfTravel);

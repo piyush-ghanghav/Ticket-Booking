@@ -12,7 +12,7 @@
       "Pune": "09:15:00",
       "Nashik": "12:00:00"
     },
-    "stations": ["Mumbai", "Pune", "Nashik"]
+    "stations": ["mumbai", "pune", "nashik"]
   },
   {
     "trainId": "T456",

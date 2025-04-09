@@ -21,6 +21,7 @@ dependencies {
 
     // This dependency is used by the application.
     implementation libs.guava
+    implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("com.fasterxml.jackson.core:jackson-databind:2.0.1")
     implementation("org.mindrot:jbcrypt:0.4")
@@ -34,6 +35,5 @@ java {
 }
 
 application {
-    // Define the main class for the application.
-    mainClass = 'org.example.App'
+    mainClass = 'ticket.booking.App'
 }
