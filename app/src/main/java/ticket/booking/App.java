@@ -2,6 +2,7 @@
 package ticket.booking;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,19 +63,16 @@ public class App {
                 case 2:
                     System.out.println("Enter username to Login");
                     String nameToLogin = sc.next();
-                    System.out.println("Enter the password to Signup");
+                    System.out.println("Enter the password to Login");
                     String passwordToLogin = sc.next();
-                    User userToLogin = new User(nameToLogin, passwordToLogin,
-                                    UserServiceUtil.hashPassword(passwordToLogin),
-                                    new ArrayList<>(), UUID.randomUUID().toString()
-                            );
-                    try{
-                        userBookingService = new UserBookingService(userToLogin);
 
-                    }catch(IOException e){
-                        return;
+                    if(userBookingService.loginUser(nameToLogin, passwordToLogin)){
+                        System.out.println("Login successful!");
+                        User loggedInUser = userBookingService.getCurrentUser();
+                        System.out.println("Welcome back, "+loggedInUser.getName());
+                    }else{
+                        System.out.println("Login failed! Invalid Credentials");
                     }
-
                     break;
                 case 3:
                     System.out.println("Fetching your bookings");

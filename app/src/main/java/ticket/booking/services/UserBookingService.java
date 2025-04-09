@@ -41,14 +41,22 @@ public class UserBookingService {
         return objectMapper.readValue(users, new TypeReference<List<User>>() {});
     }
 
-    public Boolean loginUser() {
+    public Boolean loginUser(String username, String password) {
         Optional<User> foundUser = userList.stream()
-                .filter(user1 -> user1.getName().equalsIgnoreCase(user.getName()) &&
-                        UserServiceUtil.checkPassword(user.getPassword(), user1.getHashedPassword()))
+                .filter(existingUser -> existingUser.getName().equalsIgnoreCase(username))
                 .findFirst();
-        return foundUser.isPresent();
+        if(foundUser.isPresent()){
+            User existingUser = foundUser.get();
+            if(UserServiceUtil.checkPassword(password,existingUser.getHashedPassword())){
+                this.user = existingUser;
+                return true;
+            }
+        }
+        return false;
     }
-
+    public User getCurrentUser() {
+        return this.user;
+    }
     public Boolean signUp(User user1) {
         try {
             boolean userExists = userList.stream().anyMatch(existingUser -> existingUser.getName().equalsIgnoreCase(user1.getName()));
