@@ -1,16 +1,54 @@
 [
   {
     "name": "Leo",
-    "password": "Pass",
+    "password": "Pass123",
     "hashedPassword": "$2a$10$ceBMmTNDj9KmRZXQuPoDIuipJ6Bci9k9otGZosYchbK.OTXKbvHwS",
-    "ticketsBooked": [],
-    "userId": "b0fe7a31-517f-45e8-a68b-aa090365123d"
+    "userId": "b0fe7a31-517f-45e8-a68b-aa090365123d",
+    "ticketsBooked": [
+      {
+        "ticketId": "TKT001",
+        "userId": "b0fe7a31-517f-45e8-a68b-aa090365123d",
+        "source": "mumbai",
+        "destination": "pune",
+        "dateOfTravel": "2024-04-15",
+        "train": {
+          "trainId": "T123",
+          "trainNo": "12345",
+          "seats": [[0,1,0,1],[1,0,1,0],[0,0,1,1]],
+          "stationTime": {
+            "mumbai": "06:30:00",
+            "pune": "09:15:00",
+            "nashik": "12:00:00"
+          },
+          "stations": ["mumbai", "pune", "nashik"]
+        }
+      }
+    ]
   },
   {
     "name": "Piyush",
-    "password": "Pass",
+    "password": "Pass456",
     "hashedPassword": "$2a$10$GO6yK9KoVxSxw1OcOarmFuhGvf6Nz/qE7njJsTVg/nMs1FdYIWl8G",
-    "ticketsBooked": [],
-    "userId": "e4ac0c29-b67b-4544-a78e-178b1db6595a"
+    "userId": "e4ac0c29-b67b-4544-a78e-178b1db6595a",
+    "ticketsBooked": [
+      {
+        "ticketId": "TKT002",
+        "userId": "e4ac0c29-b67b-4544-a78e-178b1db6595a",
+        "source": "delhi",
+        "destination": "jaipur",
+        "dateOfTravel": "2024-04-20",
+        "train": {
+          "trainId": "T456",
+          "trainNo": "67890",
+          "seats": [[1,0,1],[0,1,0],[1,1,0]],
+          "stationTime": {
+            "delhi": "08:00:00",
+            "agra": "10:45:00",
+            "jaipur": "14:30:00"
+          },
+          "stations": ["delhi", "agra", "jaipur"]
+        }
+      }
+    ]
   }
 ]

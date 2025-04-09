@@ -89,8 +89,26 @@ public class UserBookingService {
 
 
     public void fetchBooking() {
-        if (user != null) {
-            user.printTickets();
+        if(user == null){
+            System.out.println("Please login first!");
+            return;
+        }
+
+        List<Ticket> tickets = user.getTicketsBooked();
+        if (tickets == null || tickets.isEmpty()) {
+            System.out.println("No bookings found!");
+            return;
+        }
+
+        System.out.println("\n=== Your Bookings ===");
+        for(Ticket ticket : tickets){
+            System.out.println("\nTicket ID: "+ticket.getTicketId());
+            System.out.println("From: "+ ticket.getSource());
+            System.out.println("To: "+ticket.getDestination());
+            System.out.println("Train Number: "+ticket.getTrain().getTrainNo());
+            System.out.println("Travel Date: "+ticket.getDateOfTravel());
+//            System.out.println("Seat: Row "+ticket.getSeatRow()+", Col "+ ticket.getSeatCol());
+            System.out.println("------------------------------------");
         }
     }
 

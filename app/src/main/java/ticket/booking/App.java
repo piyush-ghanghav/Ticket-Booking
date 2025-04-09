@@ -17,6 +17,15 @@ import ticket.booking.util.UserServiceUtil;
 
 public class App {
 
+    private static boolean checkLoggedIn(UserBookingService userBookingService){
+        User currentUser = userBookingService.getCurrentUser();
+        if((currentUser == null)){
+            System.out.println("\n Please login first!");
+            return false;
+        }
+        return true;
+    }
+
     public static void main(String[] args) throws ParseException, IOException {
         System.out.println("Running Train Booking Service");
         Scanner sc = new Scanner(System.in);
@@ -26,9 +35,10 @@ public class App {
             userBookingService = new UserBookingService();
         }
         catch(IOException e){
-            System.out.println("Something went wrong");
+            System.out.println("Something went wrong"+e.getMessage());
             return;
         }
+
 
         while(option!=7){
             System.out.println("Menu");
@@ -75,6 +85,9 @@ public class App {
                     }
                     break;
                 case 3:
+                    if(!checkLoggedIn(userBookingService)){
+                        break;
+                    }
                     System.out.println("Fetching your bookings");
                     userBookingService.fetchBooking();
                     break;
