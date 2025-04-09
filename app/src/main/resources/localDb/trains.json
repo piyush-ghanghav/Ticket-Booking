@@ -8,9 +8,9 @@
       [0, 0, 1, 1]
     ],
     "stationTime": {
-      "Mumbai": "06:30:00",
-      "Pune": "09:15:00",
-      "Nashik": "12:00:00"
+      "mumbai": "06:30:00",
+      "pune": "09:15:00",
+      "nashik": "12:00:00"
     },
     "stations": ["mumbai", "pune", "nashik"]
   },
@@ -23,10 +23,10 @@
       [1, 1, 0]
     ],
     "stationTime": {
-      "Delhi": "08:00:00",
-      "Agra": "10:45:00",
-      "Jaipur": "14:30:00"
+      "delhi": "08:00:00",
+      "agra": "10:45:00",
+      "jaipur": "14:30:00"
     },
-    "stations": ["Delhi", "Agra", "Jaipur"]
+    "stations": ["delhi", "agra", "jaipur"]
   }
 ]

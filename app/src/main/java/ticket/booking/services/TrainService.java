@@ -13,7 +13,7 @@ import ticket.booking.entities.Train;
 public class TrainService {
 
     // Update path to be relative to project root
-    private static final String TRAINS_PATH = "./src/main/resources/localDb/trains.json";
+    private static final String TRAINS_PATH = "./app/src/main/resources/localDb/trains.json";
     private final ObjectMapper objectMapper = new ObjectMapper();
     private Train train;
     private List<Train> trainList;
@@ -42,15 +42,52 @@ public class TrainService {
     }
 
     public List<Train> searchTrains(String source, String destination) {
+        System.out.println("Searching trains from "+source+" to "+destination);
         return trainList.stream()
                 .filter(train -> validTrain(train, source, destination))
                 .collect(Collectors.toList());
     }
 
+
     private boolean validTrain(Train train, String source, String destination) {
-        List<String> stationOrder = train.getStations();
-        int sourceIndex = stationOrder.indexOf(source.toLowerCase());
-        int destinationIndex = stationOrder.indexOf(destination.toLowerCase());
+        List<String> stations = train.getStations();
+
+        source = source.toLowerCase();
+        destination = destination.toLowerCase();
+
+        int sourceIndex = -1;
+        int destinationIndex = -1;
+
+        for(int i = 0;i<stations.size(); ++i){
+            String station  = stations.get(i).toLowerCase();
+            if(station.equals(source)){
+                sourceIndex = i;
+            }
+            if(station.equals(destination)){
+                destinationIndex = i;
+            }
+        }
         return sourceIndex != -1 && destinationIndex != -1 && sourceIndex < destinationIndex;
     }
+
+    public void printAvailableStations(){
+        System.out.println("\nAvailable Stations: ");
+        trainList.stream()
+                .flatMap(train->train.getStations().stream())
+                .distinct()
+                .sorted()
+                .forEach(station -> System.out.println("- "+station));
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

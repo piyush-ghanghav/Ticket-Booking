@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import ticket.booking.entities.Train;
 import ticket.booking.entities.User;
+import ticket.booking.services.TrainService;
 import ticket.booking.services.UserBookingService;
 import ticket.booking.util.UserServiceUtil;
 
@@ -92,22 +93,36 @@ public class App {
                     userBookingService.fetchBooking();
                     break;
                 case 4:
+                    System.out.println("\n=== Search Trains ===");
                     System.out.println("Type your source station");
-                    String source = sc.next();
+                    String source = sc.next().trim();
                     System.out.println("Type your destination station");
-                    String destination = sc.next();
+                    String destination = sc.next().trim();
+
                     List<Train> trains = userBookingService.getTrains(source, destination);
                     if(trains.isEmpty()){
-                        System.out.println("No trains for this route");
+                        System.out.println("No trains for route: "+source+" -> "+destination);
+                        TrainService trainService = new TrainService();
+                        trainService.printAvailableStations();
                         break;
                     }
 
+                    System.out.println("\nFound "+ trains.size()+" trains:");
+                    System.out.println("----------------------------------------");
+
                     int index = 1;
-                    for(Train t: trains){
-                        System.out.println(index+"Train id : "+t.getTrainId());
-                        for(Map.Entry<String, String> entry: t.getStationTime().entrySet()){
-                            System.out.println("station"+entry.getKey()+"| Time: "+entry.getValue());
+                    for(Train train: trains){
+                        System.out.println("Train "+index+":");
+                        System.out.println("Train Number: "+train.getTrainNo());
+                        System.out.println("Train ID: "+train.getTrainId());
+                        System.out.println("\nSchedule: ");
+                        Map<String, String> schedule = train.getStationTime();
+
+                        for(String station: train.getStations()){
+                            System.out.println(station +" -> "+ schedule.get(station.toLowerCase()));
+
                         }
+                        System.out.println("----------------------------------------");
                         index++;
                     }
                     break;
