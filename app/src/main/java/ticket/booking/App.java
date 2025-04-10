@@ -125,49 +125,77 @@ public class App {
                         System.out.println("----------------------------------------");
                         index++;
                     }
+
                     break;
                 case 5:
+                    if(!checkLoggedIn(userBookingService)){
+                        break;
+                    }
+                    System.out.println("=== Book a Ticket ===");
                     System.out.println("Enter source station:");
-                    String src = sc.next();
+                    String src = sc.next().trim().toLowerCase();
                     System.out.println("Enter destination station:");
-                    String dst = sc.next();
+                    String dst = sc.next().trim().toLowerCase();
 
                     List<Train> foundTrains = userBookingService.getTrains(src,dst);
                     if(foundTrains.isEmpty()){
-                        System.out.println("No trains are available for this route");
+                        System.out.println("No trains are available for this route!");
+                        TrainService trainService = new TrainService();
+                        trainService.printAvailableStations();
                         break;
                     }
 
-                    int trainIndex = 1;
-                    for(Train t: foundTrains){
-                        System.out.println(trainIndex+". Train ID: "+ t.getTrainId());
-                        trainIndex++;
+                    System.out.println("\nAvailable Trains: ");
+                    for(int i = 0; i<foundTrains.size(); ++i){
+                        Train t = foundTrains.get(i);
+                        System.out.println("\n"+(i+1)+". "+t.getTrainNo());
+                        System.out.println("From: "+src+" at "+t.getStationTime().get(src));
+                        System.out.println("To: "+dst+" at "+t.getStationTime().get(dst));
                     }
 
-                    System.out.println("Select train number (1 - "+foundTrains.size()+"):");
+                    System.out.println("Select train number (1-"+foundTrains.size()+"): ");
                     int selected = sc.nextInt();
 
-                    if(selected < 1 || selected > foundTrains.size()){
-                        System.out.println("Invalid Train selected");
+                    if(selected<1 || selected>foundTrains.size()){
+                        System.out.println("Invalid train selection!");
+                        break;
+                    }
+                    Train selectedTrain = foundTrains.get(selected-1);
+                    selectedTrain.displaySeatLayout();
+                    int row, col;
+                    do {
+                        System.out.print("\nEnter row number (0-" + (selectedTrain.getSeats().size() - 1) + "): ");
+                        row = sc.nextInt();
+                        System.out.print("Enter column number (0-" + (selectedTrain.getSeats().get(0).size() - 1) + "): ");
+                        col = sc.nextInt();
+
+                        if (row < 0 || row >= selectedTrain.getSeats().size() ||
+                                col < 0 || col >= selectedTrain.getSeats().get(0).size()) {
+                            System.out.println("\n Invalid seat numbers! Please try again.");
+                            continue;
+                        }
+
+                        if (!selectedTrain.isSeatAvailable(row, col)) {
+                            System.out.println("\n Seat already booked! Please choose another seat.");
+                            continue;
+                        }
+                        break;
+                    } while (true);
+
+                    if(!selectedTrain.isSeatAvailable(row, col)){
+                        System.out.println("Invalid seat or seat already booked!");
                         break;
                     }
 
-                    Train selectedTrain  = foundTrains.get(selected-1);
-
-                    System.out.println("Enter Date of travel (dd-mm-yyyy):");
+                    System.out.println("Enter travel date (dd-mm-yyyy): ");
                     String travelDate = sc.next();
 
-                    System.out.println("Enter seat row:");
-                    int row = sc.nextInt();
+                    boolean booked = userBookingService.bookSeat(selectedTrain,src,dst,travelDate,row, col );
 
-                    System.out.println("Enter seat column:");
-                    int col = sc.nextInt();
-
-                    boolean booked = userBookingService.bookSeat(selectedTrain, src, dst, travelDate, row, col);
                     if(booked){
-                        System.out.println("Seat Booked Successfully");
+                        System.out.println("Ticket booking successful");
                     }else{
-                        System.out.println("Booking Failed");
+                        System.out.println("Booking failed! Try again.");
                     }
                     break;
             }

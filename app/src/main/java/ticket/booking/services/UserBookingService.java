@@ -77,8 +77,6 @@ public class UserBookingService {
     }
     private void saveUserListToFile() throws IOException {
         File usersFile = new File(USERS_PATH);
-
-        // Ensure parent directories exist
         File parentDir = usersFile.getParentFile();
         if (!parentDir.exists()) {
             parentDir.mkdirs();
@@ -119,19 +117,34 @@ public class UserBookingService {
     }
 
     public boolean bookSeat(Train train, String source, String destination, String date, int row, int col) throws ParseException, IOException {
+
+        if(!train.isSeatAvailable(row, col)){
+            System.out.println("Seat is booked!");
+            return false;
+        }
+
         try{
+            TrainService trainService = new TrainService();
+            if (!train.bookSeat(train.getTrainId(), row, col)) {
+                return false;
+            }
             Ticket ticket = new Ticket();
+
             ticket.setTicketId(UUID.randomUUID().toString());
             ticket.setUserId(user.getUserId());
             ticket.setSource(source);
             ticket.setDestination(destination);
-            ticket.setDateOfTravel(new SimpleDateFormat("dd-mm-yyyy").parse(date));
+            ticket.setDateOfTravel(new SimpleDateFormat("dd-MM-yyyy").parse(date));
             ticket.setTrain(train);
+
+            if(user.getTicketsBooked() == null){
+                user.setTicketsBooked(new ArrayList<>());
+            }
             user.getTicketsBooked().add(ticket);
             saveUserListToFile();
             return true;
         }catch(Exception e){
-
+            System.out.println("Error booking seat: "+e.getMessage());
             return false;
         }
     }

@@ -78,6 +78,29 @@ public class TrainService {
                 .sorted()
                 .forEach(station -> System.out.println("- "+station));
     }
+
+    public boolean bookSeat(String trainId, int row, int col) throws IOException{
+
+        Train trainToUpdate = trainList.stream()
+                .filter(t->t.getTrainId().equals(trainId))
+                .findFirst()
+                .orElse(null);
+
+        if(trainToUpdate == null){
+            return false;
+        }
+
+        if(trainToUpdate.bookSeat(train.getTrainId(), row, col)){
+            saveTrains();
+            return true;
+        }
+        return false;
+    }
+
+    private void saveTrains() throws IOException{
+        File trainFile = new File(TRAINS_PATH);
+        objectMapper.writeValue(trainFile, trainList);
+    }
 }
 
 
