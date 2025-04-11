@@ -29,16 +29,14 @@ public class TrainService {
 
     private void loadTrains() throws IOException {
         File trainFile = new File(TRAINS_PATH);
-        System.out.println("Loading Trains");
         if (!trainFile.exists()) {
             System.out.println("File Not found");
-            trainList = List.of();  // empty list fallback
+            trainList = List.of();
         } else {
 
             trainList = objectMapper.readValue(trainFile, new TypeReference<List<Train>>() {});
             System.out.println("Loaded " + trainList.size() + " trains");
         }
-        System.out.println("Done");
     }
 
     public List<Train> searchTrains(String source, String destination) {
@@ -96,7 +94,20 @@ public class TrainService {
         }
         return false;
     }
+    public boolean cancelSeat(String trainId, int row, int col) throws IOException {
+        Train trainToUpdate = trainList.stream()
+                .filter(t -> t.getTrainId().equals(trainId))
+                .findFirst()
+                .orElse(null);
 
+        if (trainToUpdate == null) {
+            return false;
+        }
+
+        trainToUpdate.getSeats().get(row).set(col, 0);
+        saveTrains();
+        return true;
+    }
     private void saveTrains() throws IOException{
         File trainFile = new File(TRAINS_PATH);
         objectMapper.writeValue(trainFile, trainList);

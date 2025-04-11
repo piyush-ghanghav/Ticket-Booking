@@ -110,10 +110,33 @@ public class UserBookingService {
         }
     }
 
-    public Boolean cancelBooking(String ticketId) {
-        // CancelBooking 
-        
-        return Boolean.FALSE;
+    public Boolean cancelBooking(String ticketId) throws IOException {
+        if(user == null || user.getTicketsBooked() == null){
+            System.out.println("No bookings found!");
+            return false;
+        }
+        Ticket ticketToCancel = user.getTicketsBooked().stream()
+                .filter(t->t.getTicketId().equals(ticketId))
+                .findFirst()
+                .orElse(null);
+        if(ticketToCancel == null ){
+            System.out.println("Ticket not found!");
+            return false;
+        }
+        TrainService trainService = new TrainService();
+        Train train = ticketToCancel.getTrain();
+
+        if (!trainService.cancelSeat(train.getTrainId(),
+                ticketToCancel.getSeatRow(), ticketToCancel.getSeatCol())) {
+            System.out.println("Error updating train seat!");
+            return false;
+        }
+
+        user.getTicketsBooked().remove(ticketToCancel);
+        saveUserListToFile();
+
+        return true;
+
     }
 
     public boolean bookSeat(Train train, String source, String destination, String date, int row, int col) throws ParseException, IOException {
@@ -125,7 +148,7 @@ public class UserBookingService {
 
         try{
             TrainService trainService = new TrainService();
-            if (!train.bookSeat(train.getTrainId(), row, col)) {
+            if (!trainService.bookSeat(train.getTrainId(), row, col)) {
                 return false;
             }
             Ticket ticket = new Ticket();
@@ -136,6 +159,8 @@ public class UserBookingService {
             ticket.setDestination(destination);
             ticket.setDateOfTravel(new SimpleDateFormat("dd-MM-yyyy").parse(date));
             ticket.setTrain(train);
+            ticket.setSeatRow(row);   
+            ticket.setSeatCol(col);    
 
             if(user.getTicketsBooked() == null){
                 user.setTicketsBooked(new ArrayList<>());
@@ -146,6 +171,15 @@ public class UserBookingService {
         }catch(Exception e){
             System.out.println("Error booking seat: "+e.getMessage());
             return false;
+        }
+    }
+    public void logout() {
+        if (this.user != null) {
+            System.out.println("\nLogging out " + this.user.getName() + "...");
+            this.user = null;
+            System.out.println("Logged out successfully!");
+        } else {
+            System.out.println("No user is currently logged in!");
         }
     }
 

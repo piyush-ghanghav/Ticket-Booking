@@ -2,13 +2,11 @@
 package ticket.booking;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.UUID;
 
 import ticket.booking.entities.Train;
 import ticket.booking.entities.User;
@@ -49,7 +47,8 @@ public class App {
             System.out.println("4. Search Trains");
             System.out.println("5. Book a Seat");
             System.out.println("6. Cancel my Bookings");
-            System.out.println("7. Exit");
+            System.out.println("7. Logout");
+            System.out.println("8. Exit");
             System.out.println("Choose a option: ");
             option = sc.nextInt();
             switch (option){
@@ -198,6 +197,42 @@ public class App {
                         System.out.println("Booking failed! Try again.");
                     }
                     break;
+                case 6:
+                    if(!checkLoggedIn(userBookingService)){
+                        break;
+                    }
+                    System.out.println("\n=== Cancel Booking ===");
+
+                    userBookingService.fetchBooking();
+
+                    if(userBookingService.getCurrentUser().getTicketsBooked().isEmpty()){
+                        System.out.println("No tickets found!");
+                        break;
+                    }
+                    System.out.println("Enter ticket ID to cancel: ");
+                    String ticketId = sc.next();
+
+                    try{
+                        if(userBookingService.cancelBooking(ticketId)){
+                            System.out.println("\nBooking cancelled successfully!");
+                            System.out.println("Updated bookings: ");
+                            userBookingService.fetchBooking();
+                        }else{
+                            System.out.println("\n Cancellation failed! Please check Ticket ID.");
+                        }
+                    }catch(IOException e){
+                        System.out.println("Error During cancellation: "+e.getMessage());
+                    }
+                    break;
+                case 7:
+                    userBookingService.logout();
+                    break;
+                case 8:
+                    System.out.println("\nThank you for using IRCTC Booking System!");
+                    System.out.println("Goodbye!");
+                    sc.close();
+                    return;
+
             }
         }
     }
